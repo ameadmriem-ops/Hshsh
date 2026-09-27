@@ -1,0 +1,6 @@
+{
+  "name": "MY IPTV",
+  "description": "تطبيق MY IPTV لمشاهدة القنوات الفضائية والرياضية مع نظام مكافآت AdMob",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

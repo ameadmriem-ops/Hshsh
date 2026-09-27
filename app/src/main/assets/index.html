@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#08090d">
+<title>MY IPTV</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#07080c;--panel:#11131a;--panel2:#181b26;--border:rgba(255,255,255,.08);--text:#f7f7fb;--muted:#9297a8;--accent:#7c5cff;--accent2:#a18cff;--danger:#ff476f}
+html,body{margin:0;padding:0;width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}
+body{overflow-x:hidden}button,input{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
+.app-header{position:sticky;top:0;z-index:50;background:rgba(8,9,13,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.header-inner{height:68px;display:flex;align-items:center;gap:10px;padding:0 14px}.logo{font-size:20px;font-weight:900;letter-spacing:.5px;white-space:nowrap}.logo span{color:var(--accent2)}
+.header-actions{margin-right:auto;display:flex;gap:7px}.icon-btn{width:42px;height:42px;border-radius:13px;color:#fff;background:var(--panel2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:19px}.icon-btn:active{transform:scale(.94)}
+.search-wrap{padding:10px 14px 12px}.search-box{position:relative}.search-box input{width:100%;height:47px;border-radius:14px;border:1px solid var(--border);outline:none;background:#12141b;color:#fff;padding:0 45px 0 15px;direction:rtl}.search-box input:focus{border-color:rgba(124,92,255,.6)}.search-icon{position:absolute;right:15px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search-clear{position:absolute;left:12px;top:50%;transform:translateY(-50%);background:none;color:var(--muted);font-size:18px;display:none;width:24px;height:24px;line-height:22px;border-radius:50%;align-items:center;justify-content:center}
+.search-clear.show{display:flex}
+main{width:100%;max-width:1100px;margin:auto;padding:16px 14px 90px}.page-title{display:flex;align-items:center;gap:10px;margin:5px 0 15px}.page-title h1{margin:0;font-size:23px}.page-title small{color:var(--muted);font-size:12px}.status{color:var(--muted);font-size:13px;margin:0 0 14px}
+.groups-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.group-card{min-height:98px;padding:15px;border-radius:18px;background:linear-gradient(145deg,#151721,#0f1117);border:1px solid var(--border);color:#fff;text-align:right;position:relative;overflow:hidden;transition:.18s}.group-card:active{transform:scale(.97)}.group-icon{font-size:25px;margin-bottom:8px}.group-name{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.group-count{color:var(--muted);font-size:12px;margin-top:4px}
+.country-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.country-card{padding:14px;border-radius:17px;background:var(--panel);border:1px solid var(--border);display:flex;align-items:center;gap:10px;min-width:0;text-align:right;color:#fff}.country-card:active{transform:scale(.97)}.country-flag{width:40px;height:40px;border-radius:12px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:21px;flex:none}.country-info{min-width:0}.country-name{font-size:14px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.country-count{color:var(--muted);font-size:12px;margin-top:3px}
+.back-row{display:flex;align-items:center;gap:9px;margin-bottom:15px}.back-btn{padding:10px 14px;border-radius:12px;background:var(--panel2);border:1px solid var(--border);color:#fff}
+.channels-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.channel-card{min-width:0;min-height:82px;background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:9px;display:flex;align-items:center;gap:9px;position:relative}.channel-card:active{transform:scale(.98)}.channel-logo{width:48px;height:48px;border-radius:12px;object-fit:contain;background:#0b0c11;padding:4px;flex:none}.channel-logo-fallback{width:48px;height:48px;border-radius:12px;background:#20222c;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}.channel-info{min-width:0;flex:1;padding-left:25px}.channel-name{font-size:13px;font-weight:800;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.channel-meta{margin-top:4px;font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.favorite-btn{position:absolute;left:7px;top:7px;width:30px;height:30px;border-radius:10px;background:rgba(255,255,255,.05);color:#858894;font-size:16px;z-index:3}.favorite-btn.active{color:var(--danger)}
+.empty{padding:45px 20px;text-align:center;color:var(--muted)}.empty-icon{font-size:45px;margin-bottom:10px}.empty-title{color:#fff;font-size:17px;font-weight:800;margin-bottom:5px}.loading{text-align:center;padding:45px 10px;color:var(--muted)}.spinner{width:36px;height:36px;margin:0 auto 13px;border:3px solid rgba(255,255,255,.12);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.player-page{position:fixed;inset:0;z-index:100;background:#000;display:none;flex-direction:column}.player-page.active{display:flex}.player-top{height:58px;flex:none;display:flex;align-items:center;gap:10px;padding:0 12px;background:#090a0e;border-bottom:1px solid rgba(255,255,255,.08)}.player-back{width:42px;height:42px;border-radius:13px;background:#171922;color:#fff;font-size:19px}.player-title{flex:1;min-width:0;font-size:15px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.video-container{flex:1;display:flex;align-items:center;justify-content:center;background:#000;position:relative}video{width:100%;max-height:100%;display:block;background:#000}.player-message{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px;background:#000;z-index:5}.player-message.show{display:flex}.player-message .error-icon{font-size:45px;margin-bottom:12px}.player-message strong{font-size:17px;margin-bottom:6px}.player-message span{color:#999;font-size:13px;line-height:1.7}.retry-btn{margin-top:18px;padding:11px 20px;border-radius:12px;color:#fff;background:var(--accent)}.player-bottom{min-height:62px;padding:10px 14px;background:#090a0e;color:#aaa;font-size:12px;text-align:center}
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:#242630;color:#fff;padding:12px 17px;border-radius:13px;font-size:13px;z-index:300;opacity:0;pointer-events:none;transition:.25s;max-width:90%;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.4)}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:420px){.channels-grid{grid-template-columns:1fr}}@media(min-width:700px){.groups-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.country-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.channels-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:1000px){.channels-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* ===== Modern IPTV home ===== */
+.home-hero{position:relative;overflow:hidden;border:1px solid var(--border);border-radius:26px;padding:24px 20px;margin:4px 0 22px;background:radial-gradient(circle at 10% 20%,rgba(124,92,255,.28),transparent 35%),linear-gradient(135deg,#171326,#0d1018 70%);box-shadow:0 18px 45px rgba(0,0,0,.25)}
+.home-hero:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;background:rgba(124,92,255,.12);filter:blur(30px);left:-50px;bottom:-90px}
+.hero-kicker{position:relative;z-index:1;color:#b9afff;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px}
+.hero-title{position:relative;z-index:1;font-size:28px;font-weight:950;margin:0 0 7px}
+.hero-sub{position:relative;z-index:1;color:#a7abb9;font-size:13px;line-height:1.7;max-width:620px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:24px 0 12px}
+.section-head h2{margin:0;font-size:18px;font-weight:900}
+.section-head span{color:var(--muted);font-size:11px}
+.poster-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.poster-card{position:relative;min-height:205px;border-radius:21px;overflow:hidden;border:1px solid var(--border);background:#11131a;color:#fff;text-align:right;padding:0;box-shadow:0 12px 30px rgba(0,0,0,.22);transition:.22s;isolation:isolate}
+.poster-card:active{transform:scale(.97)}
+.poster-card:hover{transform:translateY(-3px);border-color:rgba(124,92,255,.42)}
+.poster-art{position:absolute;inset:0;z-index:-2;background:linear-gradient(145deg,#303040,#11131a)}
+.poster-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.03) 15%,rgba(0,0,0,.2) 38%,rgba(0,0,0,.92) 100%)}
+.poster-badge{position:absolute;top:11px;right:11px;padding:6px 9px;border-radius:10px;background:rgba(0,0,0,.46);backdrop-filter:blur(10px);font-size:10px;font-weight:800;border:1px solid rgba(255,255,255,.12)}
+.poster-content{position:absolute;left:13px;right:13px;bottom:13px}
+.poster-icon{font-size:30px;margin-bottom:5px}
+.poster-title{font-size:17px;font-weight:950;line-height:1.1}
+.poster-sub{font-size:10px;color:#c4c6cf;margin-top:5px}
+.poster-morocco{background:radial-gradient(circle at 50% 22%,rgba(255,255,255,.22),transparent 22%),linear-gradient(145deg,#c1272d 0%,#7f1118 52%,#16090b 100%)}
+.poster-bein{background:radial-gradient(circle at 75% 25%,rgba(0,198,255,.42),transparent 28%),linear-gradient(145deg,#111827,#052d46 55%,#070a10)}
+.poster-onepiece{background:radial-gradient(circle at 72% 24%,rgba(255,198,64,.55),transparent 20%),linear-gradient(145deg,#102d56,#0a172c 52%,#05070b)}
+.poster-world{background:radial-gradient(circle at 25% 20%,rgba(124,92,255,.5),transparent 25%),linear-gradient(145deg,#282042,#10121a)}
+.collection-page-head{position:relative;border-radius:22px;overflow:hidden;margin-bottom:16px;min-height:150px;padding:20px;background:linear-gradient(135deg,#171a26,#0e1016);border:1px solid var(--border)}
+.collection-page-head .mini-art{position:absolute;inset:0;opacity:.38}
+.collection-page-head .mini-info{position:relative;z-index:2}
+.collection-page-head h1{margin:0 0 6px;font-size:24px}
+.collection-page-head p{margin:0;color:#a8abb7;font-size:12px}
+.collection-chip{display:inline-flex;margin-top:12px;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,.07);font-size:10px;color:#d8d9df}
+@media(min-width:600px){.poster-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:900px){.poster-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.country-card{content-visibility:auto}.channel-card{content-visibility:auto}img{background:#0b0c11}.search-box input{direction:auto;text-align:start}.search-clear{border:0;cursor:pointer}</style>
+</head>
+<body>
+<header class="app-header">
+<div class="header-inner">
+<div class="logo">MY <span>IPTV</span></div>
+<div class="header-actions">
+<button class="icon-btn" id="refreshBtn" type="button" title="تحديث">🔄</button>
+<button class="icon-btn" id="favoritesBtn" type="button" title="المفضلة">❤️</button>
+</div>
+</div>
+<div class="search-wrap"><div class="search-box"><span class="search-icon">🔎</span><button class="search-clear" id="searchClear" type="button" aria-label="مسح البحث">×</button><input id="searchInput" type="search" placeholder="ابحث بالعربية أو Français أو English..." autocomplete="off" spellcheck="false"></div></div>
+</header>
+<main id="appMain"></main>
+<div class="player-page" id="playerPage">
+<div class="player-top"><button class="player-back" id="playerBack" type="button">→</button><div class="player-title" id="playerTitle">تشغيل القناة</div></div>
+<div class="video-container">
+<video id="videoPlayer" controls playsinline preload="none"></video>
+<div class="player-message" id="playerMessage"><div class="error-icon">⚠️</div><strong>تعذر تشغيل هذا البث</strong><span id="playerErrorText">قد يكون الرابط غير متاح أو أن الخادم لا يسمح بالتشغيل من المتصفح.</span><button class="retry-btn" id="retryBtn" type="button">إعادة المحاولة</button></div>
+</div>
+<div class="player-bottom">MY IPTV</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+const M3U_URL="https://iptv-org.github.io/iptv/index.m3u";
+const HLS_CDN="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js";
+
+const state={
+channels:[],groups:new Map(),countries:new Map(),favorites:new Set(),
+currentView:"home",currentFilter:null,currentChannel:null,hls:null,loading:false
+};
+
+const $=id=>document.getElementById(id);
+const appMain=$("appMain"),searchInput=$("searchInput"),refreshBtn=$("refreshBtn"),favoritesBtn=$("favoritesBtn"),playerPage=$("playerPage"),
+playerBack=$("playerBack"),playerTitle=$("playerTitle"),videoPlayer=$("videoPlayer"),
+playerMessage=$("playerMessage"),playerErrorText=$("playerErrorText"),retryBtn=$("retryBtn"),toast=$("toast");
+
+function escapeHTML(value){return String(value==null?"":value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function normalizeText(value){
+ return String(value==null?"":value).toLowerCase().normalize("NFD")
+ .replace(/[\u0300-\u036f]/g,"")
+ .replace(/[’'`´]/g,"")
+ .replace(/[-_/.,:;()[\]{}|+&]/g," ")
+ .replace(/\s+/g," ").trim();
+}
+function searchAliases(value){
+ const v=normalizeText(value);
+ const aliases={
+  "المغرب":"morocco","المغربية":"morocco","مغرب":"morocco","maroc":"morocco","ma":"morocco",
+  "فرنسا":"france","فرنسي":"french","francais":"french","francaise":"french","fr":"france",
+  "انجلترا":"england","بريطانيا":"united kingdom","uk":"united kingdom","gb":"united kingdom",
+  "امريكا":"usa","الولايات المتحدة":"united states","us":"usa",
+  "اسبانيا":"spain","espagne":"spain","es":"spain",
+  "المانيا":"germany","allemagne":"germany","de":"germany",
+  "ايطاليا":"italy","italie":"italy","it":"italy",
+  "الجزيره":"al jazeera","الجزيرة":"al jazeera",
+  "رياضه":"sport","رياضية":"sports","sport":"sports","sports":"sports",
+  "انمي":"anime","انيمي":"anime","anime":"anime"
+ };
+ return aliases[v]||v;
+}
+function searchMatches(channel,query){
+ const q=searchAliases(query); if(!q)return true;
+ const fields=[channel.name,channel.group,channel.country,channel.tvgId].map(normalizeText);
+ return q.split(" ").filter(Boolean).every(term=>fields.some(field=>field.includes(term)));
+}
+function channelCountryIs(channel, codes){
+ const v=normalizeText(channel.country);
+ return codes.some(x=>v===x || v.includes(x));
+}
+function channelMatchesAny(channel, patterns){
+ const text=normalizeText([channel.name,channel.group,channel.tvgId].join(" "));
+ return patterns.some(p=>p.test(text));
+}
+function smartCollections(){
+ const result=[];
+ const add=(id,title,sub,cls,icon,channels)=>{
+  if(channels.length)result.push({id,title,sub,cls,icon,channels});
+ };
+ add("morocco","المغرب","Morocco • Maroc","poster-morocco","🇲🇦",
+   state.channels.filter(c=>channelCountryIs(c,["ma","morocco","maroc","morocco -","morocco "])));
+ add("bein","beIN SPORTS","Sports channels • قنوات الرياضة","poster-bein","⚽",
+   state.channels.filter(c=>channelMatchesAny(c,[/bein\s*sport/i,/bein\s*sp/i,/bien\s*sport/i,/bein\b/i])));
+ add("onepiece","ONE PIECE","Anime • أنمي","poster-onepiece","☠️",
+   state.channels.filter(c=>channelMatchesAny(c,[/one\s*piece/i,/وان\s*بيس/i,/ون\s*بيس/i])));
+ return result;
+}
+function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove("show"),2800)}
+function getFlagEmoji(country){const code=String(country||"").trim().toUpperCase();if(!/^[A-Z]{2}$/.test(code))return"🌍";return String.fromCodePoint(127397+code.charCodeAt(0),127397+code.charCodeAt(1))}
+function safeURL(url){const value=String(url||"").trim();if(!value)return"";try{const p=new URL(value);if(p.protocol!=="http:"&&p.protocol!=="https:")return"";return p.href}catch(e){return""}}
+
+function loadFavorites(){
+try{const raw=localStorage.getItem("my_iptv_favorites");if(!raw)return;const list=JSON.parse(raw);if(Array.isArray(list))state.favorites=new Set(list.map(String).filter(Boolean))}
+catch(e){state.favorites=new Set()}
+}
+function saveFavorites(){try{localStorage.setItem("my_iptv_favorites",JSON.stringify([...state.favorites]))}catch(e){showToast("تعذر حفظ المفضلة على الجهاز")}}
+function toggleFavorite(id){const key=String(id);if(state.favorites.has(key)){state.favorites.delete(key);showToast("تمت إزالة القناة من المفضلة")}else{state.favorites.add(key);showToast("تمت إضافة القناة إلى المفضلة")}saveFavorites();renderCurrentView()}
+
+function parseAttributes(line){
+const attrs={},regex=/([A-Za-z0-9_-]+)="([^"]*)"/g;let match;
+while((match=regex.exec(line))!==null)attrs[match[1].toLowerCase()]=match[2];
+return attrs;
+}
+function createChannelId(value){
+let hash=2166136261,text=String(value||"");
+for(let i=0;i<text.length;i++){hash^=text.charCodeAt(i);hash+=(hash<<1)+(hash<<4)+(hash<<7)+(hash<<8)+(hash<<24)}
+return"ch_"+(hash>>>0).toString(16)+"_"+text.length;
+}
+function parseM3U(text){
+const channels=[];if(typeof text!=="string"||!text.trim())return channels;
+const lines=text.replace(/\r/g,"").split("\n");let pending=null;
+for(let i=0;i<lines.length;i++){
+const line=lines[i].trim();if(!line)continue;
+if(line.toLowerCase().startsWith("#extinf")){
+const attrs=parseAttributes(line),comma=line.indexOf(",");
+let name=comma>=0?line.substring(comma+1).trim():"";
+if(!name)name=attrs["tvg-name"]||attrs["name"]||"قناة بدون اسم";
+pending={name,logo:attrs["tvg-logo"]||"",group:attrs["group-title"]||"غير مصنف",country:attrs["tvg-country"]||"غير معروف",tvgId:attrs["tvg-id"]||""};
+continue;
+}
+if(pending&&!line.startsWith("#")){
+const url=safeURL(line);
+if(url)channels.push({id:createChannelId(pending.tvgId||url||pending.name),name:pending.name||"قناة بدون اسم",url,logo:safeURL(pending.logo),group:pending.group||"غير مصنف",country:pending.country||"غير معروف"});
+pending=null;
+}
+}
+return channels;
+}
+function buildIndexes(){
+state.groups=new Map();state.countries=new Map();
+for(const c of state.channels){
+c.group=c.group&&c.group.trim()?c.group.trim():"غير مصنف";
+c.country=c.country&&c.country.trim()?c.country.trim():"غير معروف";
+if(!state.groups.has(c.group))state.groups.set(c.group,[]);
+if(!state.countries.has(c.country))state.countries.set(c.country,[]);
+state.groups.get(c.group).push(c);state.countries.get(c.country).push(c);
+}
+}
+
+async function loadPlaylist(){
+if(state.loading)return;state.loading=true;renderLoading("جاري تحميل قائمة القنوات...");
+try{
+const response=await fetch(M3U_URL,{method:"GET",cache:"no-store"});
+if(!response.ok)throw new Error("HTTP "+response.status);
+const text=await response.text();if(!text||text.trim().length<10)throw new Error("empty_playlist");
+const channels=parseM3U(text);if(!channels.length)throw new Error("no_channels");
+state.channels=channels;buildIndexes();state.currentView="home";state.currentFilter=null;searchInput.value="";renderHome();
+showToast("تم تحميل "+state.channels.length.toLocaleString("ar-MA")+" قناة");
+}catch(error){console.error(error);renderLoadError(error)}finally{state.loading=false}
+}
+function renderLoading(message){appMain.innerHTML='<div class="loading"><div class="spinner"></div><div>'+escapeHTML(message)+"</div></div>"}
+function renderLoadError(error){
+let message="تعذر تحميل قائمة القنوات.",details="تحقق من اتصال الإنترنت ثم حاول تحديث القائمة.";
+if(error&&String(error.message).toLowerCase().includes("failed to fetch")){message="تعذر الاتصال بمصدر القنوات";details="قد يكون السبب CORS أو عدم توفر الاتصال بالإنترنت."}
+else if(error&&String(error.message).includes("HTTP")){message="تعذر تحميل قائمة M3U";details="خادم قائمة القنوات أعاد استجابة غير صالحة."}
+else if(error&&error.message==="no_channels"){message="لم يتم العثور على قنوات";details="ملف M3U تم تحميله ولكن لم يتم العثور على بث صالح داخله."}
+appMain.innerHTML='<section class="empty"><div class="empty-icon">⚠️</div><div class="empty-title">'+escapeHTML(message)+'</div><div>'+escapeHTML(details)+'</div><br><button class="retry-btn" type="button" id="loadAgainBtn">🔄 إعادة المحاولة</button></section>';
+const btn=$("loadAgainBtn");if(btn)btn.addEventListener("click",loadPlaylist);
+}
+
+function renderHome(){
+ state.currentView="home";state.currentFilter=null;
+ const smart=smartCollections();
+ const entries=[...state.groups.entries()]
+   .sort((a,b)=>b[1].length-a[1].length)
+   .filter(([name])=>name&&name!=="غير مصنف")
+   .slice(0,12);
+
+ appMain.innerHTML=
+ '<section class="home-hero">'+
+   '<div class="hero-kicker">MY IPTV</div>'+
+   '<h1 class="hero-title">كل القنوات في مكان واحد</h1>'+
+   '<div class="hero-sub">استكشف القنوات حسب البلد أو الشبكة أو المحتوى. يمكنك البحث بالعربية، الفرنسية أو الإنجليزية.</div>'+
+ '</section>'+
+ '<div class="section-head"><h2>مجموعات مميزة</h2><span>'+state.channels.length.toLocaleString("ar-MA")+' قناة</span></div>'+
+ '<div class="poster-grid" id="smartGrid"></div>'+
+ '<div class="section-head"><h2>المجموعات</h2><span>'+state.groups.size.toLocaleString("ar-MA")+'</span></div>'+
+ '<div class="groups-grid" id="groupsGrid"></div>';
+
+ const smartGrid=$("smartGrid");
+ for(const item of smart){
+  const card=document.createElement("button");card.type="button";card.className="poster-card";
+  card.innerHTML='<div class="poster-art '+item.cls+'"></div>'+
+    '<div class="poster-badge">'+item.channels.length.toLocaleString("ar-MA")+' قناة</div>'+
+    '<div class="poster-content"><div class="poster-icon">'+item.icon+'</div><div class="poster-title">'+escapeHTML(item.title)+'</div><div class="poster-sub">'+escapeHTML(item.sub)+'</div></div>';
+  card.addEventListener("click",()=>renderCollection(item));
+  smartGrid.appendChild(card);
+ }
+ const grid=$("groupsGrid");
+ for(const [name,channels] of entries){
+  const card=document.createElement("button");card.type="button";card.className="group-card";
+  card.innerHTML='<div class="group-icon">📺</div><div class="group-name">'+escapeHTML(name)+'</div><div class="group-count">'+channels.length.toLocaleString("ar-MA")+' قناة</div>';
+  card.addEventListener("click",()=>renderChannels(channels,"📺 "+name,"group"));grid.appendChild(card);
+ }
+}
+function renderCollection(item){
+ state.currentView="collection";
+ state.currentFilter={channels:item.channels,title:item.title,type:"collection",item};
+ appMain.innerHTML=
+ '<div class="back-row"><button class="back-btn" type="button" id="collectionBack">→ رجوع</button></div>'+
+ '<section class="collection-page-head">'+
+   '<div class="mini-art '+item.cls+'"></div>'+
+   '<div class="mini-info"><h1>'+escapeHTML(item.icon+" "+item.title)+'</h1>'+
+   '<p>'+escapeHTML(item.sub)+'</p>'+
+   '<span class="collection-chip">'+item.channels.length.toLocaleString("ar-MA")+' قناة</span></div>'+
+ '</section>'+
+ '<div class="channels-grid" id="collectionGrid"></div>';
+ $("collectionBack").addEventListener("click",renderHome);
+ appendChannelCards($("collectionGrid"),item.channels);
+}
+
+function renderCountries(){
+state.currentView="countries";state.currentFilter=null;
+const entries=[...state.countries.entries()].sort((a,b)=>b[1].length-a[1].length);
+appMain.innerHTML='<div class="page-title"><h1>🌍 الدول</h1><small>'+entries.length.toLocaleString("ar-MA")+' دولة</small></div><div class="status">اختر دولة لعرض قنواتها</div><div class="country-grid" id="countryGrid"></div>';
+const grid=$("countryGrid");
+for(const [country,channels] of entries){
+const card=document.createElement("button");card.type="button";card.className="country-card";
+card.innerHTML='<div class="country-flag">'+escapeHTML(getFlagEmoji(country))+'</div><div class="country-info"><div class="country-name">'+escapeHTML(country)+'</div><div class="country-count">'+channels.length.toLocaleString("ar-MA")+' قناة</div></div>';
+card.addEventListener("click",()=>renderChannels(channels,"🌍 "+country,"country"));grid.appendChild(card);
+}
+}
+function renderFavorites(){
+state.currentView="favorites";state.currentFilter=null;
+const favorites=state.channels.filter(c=>state.favorites.has(c.id));
+appMain.innerHTML='<div class="page-title"><h1>❤️ المفضلة</h1><small>'+favorites.length.toLocaleString("ar-MA")+' قناة</small></div>';
+if(!favorites.length){appMain.innerHTML+='<section class="empty"><div class="empty-icon">❤️</div><div class="empty-title">لا توجد قنوات مفضلة</div><div>اضغط ❤️ بجانب أي قناة لإضافتها هنا.</div></section>';return}
+const grid=document.createElement("div");grid.className="channels-grid";appMain.appendChild(grid);appendChannelCards(grid,favorites);
+}
+function renderChannels(channels,title,type){
+state.currentView="channels";state.currentFilter={channels,title,type};
+appMain.innerHTML='<div class="back-row"><button class="back-btn" type="button" id="channelsBack">→ رجوع</button><div><strong>'+escapeHTML(title)+'</strong><div style="font-size:11px;color:#858894;margin-top:3px;">'+channels.length.toLocaleString("ar-MA")+' قناة</div></div></div><div class="channels-grid" id="channelsGrid"></div>';
+$("channelsBack").addEventListener("click",()=>type==="country"?renderCountries():renderHome());appendChannelCards($("channelsGrid"),channels);
+}
+function appendChannelCards(container,channels){
+if(!container)return;
+for(const channel of channels){
+const card=document.createElement("div");card.className="channel-card";const fav=state.favorites.has(channel.id);
+const logo=channel.logo?'<img class="channel-logo" src="'+escapeHTML(channel.logo)+'" alt="" loading="lazy" referrerpolicy="no-referrer">':'<div class="channel-logo-fallback">📺</div>';
+card.innerHTML=logo+'<div class="channel-info"><div class="channel-name">'+escapeHTML(channel.name)+'</div><div class="channel-meta">'+escapeHTML(channel.country)+(channel.group?" • "+escapeHTML(channel.group):"")+'</div></div><button class="favorite-btn '+(fav?"active":"")+'" type="button" aria-label="المفضلة">'+(fav?"♥":"♡")+"</button>";
+const fb=card.querySelector(".favorite-btn");fb.addEventListener("click",e=>{e.stopPropagation();toggleFavorite(channel.id)});
+const img=card.querySelector("img");if(img)img.addEventListener("error",()=>{const f=document.createElement("div");f.className="channel-logo-fallback";f.textContent="📺";img.replaceWith(f)},{once:true});
+card.addEventListener("click",()=>openPlayer(channel));container.appendChild(card);
+}
+}
+
+
+const COUNTRY_ALIASES={
+ "المغرب":["morocco","maroc","ma","morocco"],"maroc":["morocco","maroc","ma"],
+ "morocco":["morocco","maroc","ma"],"ma":["morocco","maroc","ma"],
+ "الجزائر":["algeria","algerie","dz"],"algerie":["algeria","algerie","dz"],
+ "algeria":["algeria","algerie","dz"],"dz":["algeria","algerie","dz"],
+ "تونس":["tunisia","tunisie","tn"],"tunisie":["tunisia","tunisie","tn"],
+ "tunisia":["tunisia","tunisie","tn"],"tn":["tunisia","tunisie","tn"],
+ "مصر":["egypt","egypte","eg"],"egypte":["egypt","egypte","eg"],
+ "egypt":["egypt","egypte","eg"],"eg":["egypt","egypte","eg"],
+ "فرنسا":["france","fr"],"france":["france","fr"],"fr":["france","fr"],
+ "اسبانيا":["spain","espagne","es"],"espagne":["spain","espagne","es"],
+ "spain":["spain","espagne","es"],"es":["spain","espagne","es"],
+ "المانيا":["germany","allemagne","de"],"allemagne":["germany","allemagne","de"],
+ "germany":["germany","allemagne","de"],"de":["germany","allemagne","de"],
+ "ايطاليا":["italy","italie","it"],"italie":["italy","italie","it"],
+ "italy":["italy","italie","it"],"it":["italy","italie","it"],
+ "بريطانيا":["united kingdom","uk","gb","royaume uni"],
+ "المملكة المتحدة":["united kingdom","uk","gb","royaume uni"],
+ "united kingdom":["united kingdom","uk","gb","royaume uni"],
+ "royaume uni":["united kingdom","uk","gb","royaume uni"],"uk":["united kingdom","uk","gb"],
+ "الولايات المتحدة":["united states","usa","us","etats unis"],
+ "امريكا":["united states","usa","us","etats unis"],
+ "united states":["united states","usa","us","etats unis"],
+ "usa":["united states","usa","us","etats unis"],"us":["united states","usa","us"],
+ "كندا":["canada","ca"],"canada":["canada","ca"],"ca":["canada","ca"],
+ "بلجيكا":["belgium","belgique","be"],"belgique":["belgium","belgique","be"],
+ "belgium":["belgium","belgique","be"],"be":["belgium","belgique","be"],
+ "هولندا":["netherlands","pays bas","nl"],"netherlands":["netherlands","pays bas","nl"],
+ "pays bas":["netherlands","pays bas","nl"],"nl":["netherlands","pays bas","nl"],
+ "البرتغال":["portugal","pt"],"portugal":["portugal","pt"],"pt":["portugal","pt"],
+ "تركيا":["turkey","turquie","tr"],"turquie":["turkey","turquie","tr"],
+ "turkey":["turkey","turquie","tr"],"tr":["turkey","turquie","tr"],
+ "اليابان":["japan","japon","jp"],"japon":["japan","japon","jp"],
+ "japan":["japan","japon","jp"],"jp":["japan","japon","jp"],
+ "كوريا":["korea","coree","kr"],"coree":["korea","coree","kr"],
+ "korea":["korea","coree","kr"],"kr":["korea","coree","kr"]
+};
+
+function countrySearchTerms(query){
+ const q=normalizeText(query);
+ return COUNTRY_ALIASES[q]||[q];
+}
+
+function channelMatchesQuery(channel,query){
+ const raw=normalizeText(query);
+ if(!raw)return true;
+
+ const terms=countrySearchTerms(raw);
+ const fields=[
+   normalizeText(channel.name),
+   normalizeText(channel.group),
+   normalizeText(channel.country),
+   normalizeText(channel.tvgId)
+ ];
+
+ // If the user typed a country name, search all country aliases.
+ if(COUNTRY_ALIASES[raw]){
+   return terms.some(t=>fields.some(f=>f===t || f.includes(t)));
+ }
+
+ // Normal multilingual text search.
+ const words=raw.split(/\s+/).filter(Boolean);
+ return words.every(word=>fields.some(field=>field.includes(word)));
+}
+
+function buildSearchResults(query){
+ const value=normalizeText(query);
+ if(!value)return [];
+ return state.channels.filter(c=>channelMatchesQuery(c,value));
+}
+
+function performSearch(query){
+ const value=normalizeText(query);
+ if(!value){
+   if(state.currentView==="search")renderHome();
+   return;
+ }
+ state.currentView="search";
+ const results=buildSearchResults(value);
+ appMain.innerHTML='<div class="page-title"><h1>🔎 نتائج البحث</h1><small>'+results.length.toLocaleString("ar-MA")+' نتيجة</small></div><div class="status">يمكنك البحث باسم القناة أو المجموعة أو الدولة بالعربية أو Français أو English.</div>';
+
+ if(!results.length){
+   appMain.innerHTML+='<section class="empty"><div class="empty-icon">🔎</div><div class="empty-title">لا توجد نتائج</div><div>جرب اسم الدولة بالعربية أو الفرنسية أو الإنجليزية.</div></section>';
+   return;
+ }
+
+ const grid=document.createElement("div");
+ grid.className="channels-grid";
+ appMain.appendChild(grid);
+
+ // Render in small batches to keep the UI responsive on phones.
+ let index=0;
+ const batch=50;
+ function renderBatch(){
+   const fragment=document.createDocumentFragment();
+   const endIndex=Math.min(index+batch,results.length);
+   for(;index<endIndex;index++){
+     const channel=results[index];
+     const card=document.createElement("div");
+     card.className="channel-card";
+     const fav=state.favorites.has(channel.id);
+     const logo=channel.logo
+       ? '<img class="channel-logo" src="'+escapeHTML(channel.logo)+'" alt="" loading="lazy" referrerpolicy="no-referrer">'
+       : '<div class="channel-logo-fallback">📺</div>';
+     card.innerHTML=logo+'<div class="channel-info"><div class="channel-name">'+escapeHTML(channel.name)+'</div><div class="channel-meta">'+escapeHTML(channel.country)+(channel.group?" • "+escapeHTML(channel.group):"")+'</div></div><button class="favorite-btn '+(fav?"active":"")+'" type="button" aria-label="المفضلة">'+(fav?"♥":"♡")+"</button>";
+     const fb=card.querySelector(".favorite-btn");
+     fb.addEventListener("click",e=>{e.stopPropagation();toggleFavorite(channel.id)});
+     const img=card.querySelector("img");
+     if(img)img.addEventListener("error",()=>{const f=document.createElement("div");f.className="channel-logo-fallback";f.textContent="📺";img.replaceWith(f)},{once:true});
+     card.addEventListener("click",()=>openPlayer(channel));
+     fragment.appendChild(card);
+   }
+   grid.appendChild(fragment);
+   if(index<results.length) requestAnimationFrame(renderBatch);
+ }
+ requestAnimationFrame(renderBatch);
+}
+function isHLS(url){return String(url||"").toLowerCase().includes(".m3u8")}
+function showPlayerError(message){playerErrorText.textContent=message||"قد يكون الرابط غير متاح أو أن الخادم لا يسمح بالتشغيل من المتصفح.";playerMessage.classList.add("show")}
+function hidePlayerError(){playerMessage.classList.remove("show")}
+function destroyPlayer(){
+try{if(state.hls){state.hls.destroy();state.hls=null}}catch(e){state.hls=null}
+try{videoPlayer.pause()}catch(e){}
+videoPlayer.removeAttribute("src");try{videoPlayer.load()}catch(e){}
+state.currentChannel=null;
+}
+function loadHLSLibrary(){
+return new Promise((resolve,reject)=>{
+if(window.Hls){resolve(window.Hls);return}
+const existing=document.querySelector('script[data-hls-library="true"]');
+if(existing){existing.addEventListener("load",()=>window.Hls?resolve(window.Hls):reject(new Error("HLS unavailable")),{once:true});existing.addEventListener("error",()=>reject(new Error("HLS failed")),{once:true});return}
+const script=document.createElement("script");script.src=HLS_CDN;script.async=true;script.dataset.hlsLibrary="true";
+script.onload=()=>window.Hls?resolve(window.Hls):reject(new Error("HLS unavailable"));script.onerror=()=>reject(new Error("HLS failed"));document.head.appendChild(script);
+});
+}
+async function startStream(channel){
+hidePlayerError();const url=safeURL(channel.url);if(!url){showPlayerError("رابط البث غير صالح.");return}
+try{
+if(isHLS(url)&&videoPlayer.canPlayType("application/vnd.apple.mpegurl")){videoPlayer.src=url;await videoPlayer.play();return}
+if(isHLS(url)){
+const HlsClass=await loadHLSLibrary();
+if(HlsClass&&HlsClass.isSupported()){
+state.hls=new HlsClass({enableWorker:true,lowLatencyMode:false,backBufferLength:30});
+state.hls.attachMedia(videoPlayer);
+state.hls.on(HlsClass.Events.MEDIA_ATTACHED,()=>{if(state.hls)state.hls.loadSource(url)});
+state.hls.on(HlsClass.Events.MANIFEST_PARSED,()=>{videoPlayer.play().catch(()=>{})});
+state.hls.on(HlsClass.Events.ERROR,(event,data)=>{if(data&&data.fatal){showPlayerError("تعذر تشغيل هذا البث. قد يكون البث متوقفًا أو يمنع الاتصال من المتصفح.");try{state.hls.destroy()}catch(e){}state.hls=null}});
+return
+}
+showPlayerError("هذا المتصفح لا يدعم تشغيل HLS.");return
+}
+videoPlayer.src=url;await videoPlayer.play();
+}catch(error){console.error(error);showPlayerError("تعذر تشغيل هذا البث. قد يكون الرابط غير متاح أو أن الخادم يمنع التشغيل من المتصفح.")}
+}
+function openPlayer(channel){if(!channel)return;destroyPlayer();state.currentChannel=channel;playerTitle.textContent=channel.name||"تشغيل القناة";hidePlayerError();playerPage.classList.add("active");document.body.style.overflow="hidden";startStream(channel)}
+function closePlayer(){destroyPlayer();hidePlayerError();playerPage.classList.remove("active");document.body.style.overflow="";playerTitle.textContent="تشغيل القناة"}
+function renderCurrentView(){
+if(state.currentView==="favorites")return renderFavorites();
+if(state.currentView==="channels"&&state.currentFilter)return renderChannels(state.currentFilter.channels,state.currentFilter.title,state.currentFilter.type);
+ if(state.currentView==="collection"&&state.currentFilter)return renderCollection(state.currentFilter.item);
+if(state.currentView==="search")return performSearch(searchInput.value);
+renderHome();
+}
+
+refreshBtn.addEventListener("click",loadPlaylist);
+favoritesBtn.addEventListener("click",()=>{if(!state.channels.length){showToast("لم يتم تحميل القنوات بعد");return}searchInput.value="";renderFavorites()});
+let searchTimer=null;
+searchInput.addEventListener("input",()=>{
+ const q=searchInput.value.trim();
+ const clearBtn=document.getElementById("searchClear");
+ if(clearBtn) clearBtn.classList.toggle("show",!!q);
+ clearTimeout(searchTimer);
+ searchTimer=setTimeout(()=>performSearch(q),120);
+});
+const searchClearBtn=document.getElementById("searchClear");
+if(searchClearBtn) {
+  searchClearBtn.addEventListener("click", () => {
+    searchInput.value = "";
+    searchClearBtn.classList.remove("show");
+    performSearch("");
+  });
+}
+playerBack.addEventListener("click",closePlayer);
+retryBtn.addEventListener("click",()=>{if(state.currentChannel)startStream(state.currentChannel)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&playerPage.classList.contains("active"))closePlayer()});
+videoPlayer.addEventListener("error",()=>{if(state.currentChannel&&!playerMessage.classList.contains("show"))showPlayerError("تعذر تشغيل هذا البث.")});
+
+loadFavorites();
+loadPlaylist();
+</script>
+</body>
+</html>
